@@ -22,15 +22,82 @@ Dialog DLL:      TCM.DLL V1.14.4.0
  
 <h2>Project:</h2>
 C:\Users\hzy\Desktop\Stm32\fenglibai\USER\Template.uvprojx
-Project File Date:  07/11/2017
+Project File Date:  07/13/2017
 
 <h2>Output:</h2>
 Build target 'Template'
-compiling main.c...
+compiling imu.c...
+..\HARDWARE\IMU\imu.h(21): warning:  #1295-D: Deprecated declaration Kalman_biaoding - give arg types
+  void Kalman_biaoding();
+..\HARDWARE\IMU\imu.c(123): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        if (Gyro_x<32768) Gyro_x = -(Gyro_x / 16.4);//范围为1000deg/s时，换算关系：16.4 LSB/(deg/s)
+..\HARDWARE\IMU\imu.c(125): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        if (Gyro_x>32768) Gyro_x = +(65535 - Gyro_x) / 16.4;
+..\HARDWARE\IMU\imu.c(127): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        if (Gyro_y<32768) Gyro_y = -(Gyro_y / 16.4);//范围为1000deg/s时，换算关系：16.4 LSB/(deg/s)
+..\HARDWARE\IMU\imu.c(129): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        if (Gyro_y>32768) Gyro_y = +(65535 - Gyro_y) / 16.4;
+..\HARDWARE\IMU\imu.c(131): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        if (Gyro_z<32768) Gyro_z = -(Gyro_z / 16.4);//范围为1000deg/s时，换算关系：16.4 LSB/(deg/s)
+..\HARDWARE\IMU\imu.c(133): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        if (Gyro_z>32768) Gyro_z = +(65535 - Gyro_z) / 16.4;
+..\HARDWARE\IMU\imu.c(145): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        Angle_X_Final += (Gyro - Q_bias_x) * dt; //先验估计
+..\HARDWARE\IMU\imu.c(147): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        Pdot[0] = Q_angle - PP[0][1] - PP[1][0]; // Pk-先验估计误差协方差的微分
+..\HARDWARE\IMU\imu.c(153): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[0][0] += Pdot[0] * dt;   // Pk-先验估计误差协方差微分的积分
+..\HARDWARE\IMU\imu.c(154): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[0][1] += Pdot[1] * dt;   // =先验估计误差协方差
+..\HARDWARE\IMU\imu.c(155): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[1][0] += Pdot[2] * dt;
+..\HARDWARE\IMU\imu.c(156): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[1][1] += Pdot[3] * dt;
+..\HARDWARE\IMU\imu.c(163): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        E = R_angle + C_0 * PCt_0;
+..\HARDWARE\IMU\imu.c(183): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        Angle_Y_Final += (Gyro - Q_bias_y) * dt; //先验估计
+..\HARDWARE\IMU\imu.c(185): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        Pdot[0] = Q_angle - PP[0][1] - PP[1][0]; // Pk-先验估计误差协方差的微分
+..\HARDWARE\IMU\imu.c(191): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[0][0] += Pdot[0] * dt;   // Pk-先验估计误差协方差微分的积分
+..\HARDWARE\IMU\imu.c(192): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[0][1] += Pdot[1] * dt;   // =先验估计误差协方差
+..\HARDWARE\IMU\imu.c(193): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[1][0] += Pdot[2] * dt;
+..\HARDWARE\IMU\imu.c(194): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[1][1] += Pdot[3] * dt;
+..\HARDWARE\IMU\imu.c(201): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        E = R_angle + C_0 * PCt_0;
+..\HARDWARE\IMU\imu.c(221): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        Angle_Z_Final += (Gyro - Q_bias_z) * dt; //先验估计
+..\HARDWARE\IMU\imu.c(223): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        Pdot[0] = Q_angle - PP[0][1] - PP[1][0]; // Pk-先验估计误差协方差的微分
+..\HARDWARE\IMU\imu.c(229): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[0][0] += Pdot[0] * dt;   // Pk-先验估计误差协方差微分的积分
+..\HARDWARE\IMU\imu.c(230): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[0][1] += Pdot[1] * dt;   // =先验估计误差协方差
+..\HARDWARE\IMU\imu.c(231): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[1][0] += Pdot[2] * dt;
+..\HARDWARE\IMU\imu.c(232): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        PP[1][1] += Pdot[3] * dt;
+..\HARDWARE\IMU\imu.c(239): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        E = R_angle + C_0 * PCt_0;
+..\HARDWARE\IMU\imu.c(264): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+                if(Angle_X_1 >= Angle_X_2-0.05 && Angle_X_1 <= Angle_X_2+0.05 && Angle_X_1 != 0)
+..\HARDWARE\IMU\imu.c(264): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+                if(Angle_X_1 >= Angle_X_2-0.05 && Angle_X_1 <= Angle_X_2+0.05 && Angle_X_1 != 0)
+..\HARDWARE\IMU\imu.c(297): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+                if(Angle_Y_1 >= Angle_Y_2-0.05 && Angle_Y_1 <= Angle_Y_2+0.05 && Angle_Y_1 != 0)
+..\HARDWARE\IMU\imu.c(297): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+                if(Angle_Y_1 >= Angle_Y_2-0.05 && Angle_Y_1 <= Angle_Y_2+0.05 && Angle_Y_1 != 0)
+..\HARDWARE\IMU\imu.c(350): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        angle_R = K1 * angle_m + (1-K1) * (angle_R + gyro_m * dt);
+..\HARDWARE\IMU\imu.c: 33 warnings, 0 errors
 linking...
-Program Size: Code=20680 RO-data=584 RW-data=232 ZI-data=1848  
+Program Size: Code=37164 RO-data=3948 RW-data=368 ZI-data=1864  
 FromELF: creating hex file...
-"..\OBJ\Template.axf" - 0 Error(s), 0 Warning(s).
+"..\OBJ\Template.axf" - 0 Error(s), 33 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE

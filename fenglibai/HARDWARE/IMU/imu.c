@@ -27,6 +27,37 @@ float K_0, K_1, t_0, t_1;
 float Pdot[4] = { 0,0,0,0 };
 float PP[2][2] = { { 1, 0 },{ 0, 1 } };
 
+//卡尔曼标定参数
+float Angle_X_1_sum;//基数次角度和
+float Angle_Y_1_sum;
+float Angle_Z_1_sum;
+
+float Angle_X_1; //基数次角度平均
+float Angle_Y_1; 
+float Angle_Z_1;
+
+float Angle_X_2_sum; //偶数次角度
+float Angle_Y_2_sum; 
+float Angle_Z_2_sum; 
+
+float Angle_X_2; //偶数角度平均
+float Angle_Y_2; 
+float Angle_Z_2; 
+
+float Angle_X_static; //静态倾角参考值
+float Angle_Y_static; 
+float Angle_Z_static;
+
+float Angle_X; //卡尔曼标定后角度
+float Angle_Y; 
+float Angle_Z;
+
+char Xstaticflag=0; //X轴标定标志
+char Ystaticflag=0; //Y轴标定标志
+char Zstaticflag=0; //Z轴标定标志
+char staticflag=0; 
+int st;
+
 double KalmanFilter(const double ResrcData, double ProcessNiose_Q, double MeasureNoise_R)
 {
 	double R = MeasureNoise_R;
@@ -221,6 +252,85 @@ void Kalman_Filter_Z(float Accel, float Gyro) //卡尔曼函数
 	Angle_Z_Final += K_0 * Angle_err_z;	 //后验估计
 	Q_bias_z += K_1 * Angle_err_z;	 //后验估计
 	Gyro_z = Gyro - Q_bias_z;	 //输出值(后验估计)的微分=角速度
+}
+
+//间隔取100次数据平均比较，如两次平均值处于误差允许，则取此值为静态标定值
+void Kalman_biaoding()
+{
+	st++;
+	//X轴角度标定
+	if(Xstaticflag == 0)  
+	{
+		if(Angle_X_1 >= Angle_X_2-0.05 && Angle_X_1 <= Angle_X_2+0.05 && Angle_X_1 != 0)
+		{
+			Angle_X_static = Angle_X_Final;
+			Xstaticflag=1;
+		}
+		else
+		{
+			if(st<=100)
+			{
+				Angle_X_1_sum += Angle_X_Final;
+				if(st==100)
+				{
+					Angle_X_1 = Angle_X_1_sum/100;
+					Angle_X_1_sum = 0; 
+				}
+			}
+			else if(st<=200)
+			{
+				Angle_X_2_sum += Angle_X_Final;
+				if(st==200)
+				{
+					Angle_X_2 = Angle_X_2_sum/100;
+					Angle_X_2_sum = 0;
+					st=0;
+				}
+			}
+		}
+	}
+	Angle_X = Angle_X_Final-Angle_X_static;
+	
+	// Y轴角度标定
+	if(Ystaticflag == 0)  
+	{
+		if(Angle_Y_1 >= Angle_Y_2-0.05 && Angle_Y_1 <= Angle_Y_2+0.05 && Angle_Y_1 != 0)
+		{
+			Angle_Y_static = Angle_Y_Final;
+			Ystaticflag=1;
+		}
+		else
+		{
+			if(st<=100)
+			{
+				Angle_Y_1_sum += Angle_Y_Final;
+				if(st==100)
+				{
+					Angle_Y_1 = Angle_Y_1_sum/100;
+					Angle_Y_1_sum = 0; 
+				}
+			}
+			else if(st<=200)
+			{
+				Angle_Y_2_sum += Angle_Y_Final;
+				if(st==200)
+				{
+					Angle_Y_2 = Angle_Y_2_sum/100;
+					Angle_Y_2_sum = 0;
+					st=0;
+				}
+			}
+		}
+	}
+	Angle_Y = Angle_Y_Final-Angle_Y_static;
+	
+	//Z轴yaw不做标定
+	Angle_Z = Angle_Z_Final;
+	
+	if(Xstaticflag == 1 && Ystaticflag==1)
+	{
+		staticflag=1;
+	}
 }
 
 float angle_P,angle_R;

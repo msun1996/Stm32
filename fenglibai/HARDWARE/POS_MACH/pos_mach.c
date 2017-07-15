@@ -1,5 +1,9 @@
 #include "pos_mach.h"
 
+extern u8 mode;
+extern float length_any;
+extern u8 angle_any; 
+
 //串口1发送1个字符 
 //c:要发送的字符
 void usart1_send_char(u8 c)
@@ -181,7 +185,7 @@ void Data_Receive_Anl(u8 *data_buf,u8 num)
 	}
 	if(*(data_buf+2)==0X10)								//PID1_3  
   {
-        //fly_pitch_Kp = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+	    //fly_pitch_Kp = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
         //fly_pitch_Ki = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
         //fly_pitch_Kd = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
         //fly_roll_Kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
@@ -190,7 +194,7 @@ void Data_Receive_Anl(u8 *data_buf,u8 num)
         //fly_yaw_Kp = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
         //fly_yaw_Ki = 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
         //fly_yaw_Kd = 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
-			send_receive_check(*(data_buf+2),sum);
+		send_receive_check(*(data_buf+2),sum);
   }
   if(*(data_buf+2)==0X11)								//PID4_6
   {
@@ -203,7 +207,7 @@ void Data_Receive_Anl(u8 *data_buf,u8 num)
         //ctrl_1.PID[PID6].kp	  = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
         //ctrl_1.PID[PID6].ki 	= 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
         //ctrl_1.PID[PID6].kd 	= 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
-		    send_receive_check(*(data_buf+2),sum);
+		send_receive_check(*(data_buf+2),sum);
 	}
   if(*(data_buf+2)==0X12)								//PID7_9
   {	
@@ -216,21 +220,23 @@ void Data_Receive_Anl(u8 *data_buf,u8 num)
         //ctrl_2.PID[PIDYAW].kp 	= 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
         //ctrl_2.PID[PIDYAW].ki 	= 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
         //ctrl_2.PID[PIDYAW].kd 	= 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
-			send_receive_check(*(data_buf+2),sum);
+		send_receive_check(*(data_buf+2),sum);
 	}
 	if(*(data_buf+2)==0X13)								//PID10_12
 	{
-		     send_receive_check(*(data_buf+2),sum);
+		send_receive_check(*(data_buf+2),sum);
 	}
 	if(*(data_buf+2)==0X14)								//PID13_15
-	{
-		     send_receive_check(*(data_buf+2),sum);
+	{		     
+		send_receive_check(*(data_buf+2),sum);
 	}
 	if(*(data_buf+2)==0X15)								//PID16_18
 	{
-		     send_receive_check(*(data_buf+2),sum);
+		mode = (vs16)(*(data_buf+4)<<8)|*(data_buf+5);
+		angle_any = (vs16)(*(data_buf+6)<<8)|*(data_buf+7);
+		length_any = 0.001* ((vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+		send_receive_check(*(data_buf+2),sum);
 	}
-
 }
 
 

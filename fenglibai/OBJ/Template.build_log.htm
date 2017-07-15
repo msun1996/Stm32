@@ -26,11 +26,17 @@ Project File Date:  07/15/2017
 
 <h2>Output:</h2>
 Build target 'Template'
-compiling pid.c...
+compiling main.c...
+compiling ctrl.c...
+..\HARDWARE\CTRL\ctrl.c(110): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        x=length_l*sin(angle_l/180*3.1415);
+..\HARDWARE\CTRL\ctrl.c(111): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+        y=length_l*cos(angle_l/180*3.1415);
+..\HARDWARE\CTRL\ctrl.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=39932 RO-data=3948 RW-data=456 ZI-data=1920  
+Program Size: Code=42648 RO-data=4232 RW-data=472 ZI-data=1720  
 FromELF: creating hex file...
-"..\OBJ\Template.axf" - 0 Error(s), 0 Warning(s).
+"..\OBJ\Template.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE

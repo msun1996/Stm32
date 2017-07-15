@@ -27,7 +27,13 @@ extern float Angle_Z;
 
 extern char staticflag; //卡尔曼标定完成标志位
 
-u8 ms;
+u8 ms1,ms2;
+
+u8 mode; //方式选择
+float length_any; //长度（半径）
+u8 angle_any; //角度
+
+u8 startflag;
 
 void All_init()
 {
@@ -49,22 +55,68 @@ void get_angle()
 	MPU_Get_Gyroscope(&gyrox,&gyroy,&gyroz);	//得到陀螺仪数据
 	Angle_Calcu(); //卡尔曼滤波算法
 	Kalman_biaoding();
-	usart1_report_imu(Angle_X*100,Angle_Y*100,Angle_Z*100);
+	//usart1_report_imu(Angle_X*100,Angle_Y*100,Angle_Z*100);
 }
-
+void way1(void)
+{
+	ms1++;
+	if(startflag==0)
+	{
+		if(angle_any>=90)
+		{
+			SetPwm(5000,0,5000,0,5000,0,5000,0);
+		}
+		else
+		{
+			SetPwm(0,5000,5000,0,0,5000,5000,0);
+		}
+		startflag=1;
+	}
+	if(ms1 == 42)
+	{
+		line(angle_any,length_any);
+	}
+	if(ms1 == 124)
+	{
+		line(angle_any,length_any);
+	}
+	if(ms1 == 168)
+	{
+		ms1=0;
+	}
+}
+void way2()
+{
+	ms2++;
+	if(ms2 == 42)
+	{
+		CTRL_x(0.3);
+	}
+	if(ms2 == 84)
+	{
+		CTRL_y(0.3);
+	}
+	if(ms2 == 124)
+	{
+		CTRL_x(0.3);
+	}
+	if(ms2 == 168)
+	{
+		CTRL_y(0.3);
+		ms2=0;
+	}
+}
 int main(void)
 {
 	All_init();
 	while(1);
 }
 
-
 //定时器3中断服务函数
 void TIM3_IRQHandler(void)
 {
 	if(TIM_GetITStatus(TIM3,TIM_IT_Update)==SET) //溢出中断
 	{
-		ms++;
 		
 //		if(mpu_dmp_get_data(&pitch,&roll,&yaw)==0)
 //		{
@@ -78,30 +130,31 @@ void TIM3_IRQHandler(void)
 		get_angle(); //每10ms进行卡尔曼滤波得到当前倾角度
 		
 		if(staticflag == 1) //判断标定是否完成，完成在进行pid输出pwm
-		{
-			if(ms == 40)
+		{	
+			if(mode == 0)
 			{
-				CTRL_1();
+				SetPwm(0,0,0,0,0,0,0,0);
 			}
-//			if(ms == 60)
-//			{
-//				SetPwm(0,0,0,0,0,0,0,0);
-//			}
-			if(ms == 124)
+			if(mode == 1)
 			{
-				CTRL_1();
+				way1();
 			}
-//			if(ms == 140)
-//			{
-//				SetPwm(0,0,0,0,0,0,0,0);
-//			}
-			if(ms == 168)
+			if(mode == 2)
 			{
-				ms=0;
+				way2();
 			}
 		}
 	}
 	TIM_ClearITPendingBit(TIM3,TIM_IT_Update);  //清除中断标志位
 }
 
-
+void USART1_IRQHandler(void)                	//串口1中断服务程序
+{
+	u8 data;
+	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断
+	{
+		data=USART_ReceiveData(USART1);	//读取接收到的数据
+		usart1_receive_char(data);
+		
+	}	
+}

@@ -34,19 +34,15 @@ float change(float Distant_except)
 	Angle_except = atan2(Distant_except,0.89)/3.14*180;
 	return Angle_except;
 }
-
-void CTRL_1(void)
+//输入对应x,y长度
+void CTRL_x(float Distant_x_except)
 {
-	Angle_except_x = change(0.3);
-	Angle_except_y = change(0);
+	Angle_except_x = change(Distant_x_except);
 	inc_pwm_x = PID_CAL_x(Angle_X,Angle_except_x);
 	x_PWM_High += inc_pwm_x;
 	x_PWM_Low  -= inc_pwm_x;
 	
-	inc_pwm_y = PID_CAL_y(Angle_Y,Angle_except_y);
-	y_PWM_High += inc_pwm_y;
-	y_PWM_Low  -= inc_pwm_y;
-	mpu6050_send_data(x_PWM_High,x_PWM_Low,Angle_except_x,inc_pwm_x,Kp_err,Ki_err);
+	//mpu6050_send_data(x_PWM_High,x_PWM_Low,Angle_except_x,Angle_except_y,Kp_err,Ki_err);
 	if(x_PWM_High >10000)
 	{
 		x_PWM_High = 10000;
@@ -55,7 +51,31 @@ void CTRL_1(void)
 	{
 		x_PWM_Low = 0;
 	}
+	if(Angle_X<0)
+	{	
+		pwm2 = x_PWM_High;
+		pwm6 = x_PWM_High;
+		pwm3 = x_PWM_Low;
+		pwm7 = x_PWM_Low;
+	}
+	if(Angle_X>=0)
+	{
+		pwm2 = x_PWM_Low;
+		pwm6 = x_PWM_Low;
+		pwm3 = x_PWM_High;
+		pwm7 = x_PWM_High;
+	}
+	SetPwm(pwm0,pwm1,pwm2,pwm3,pwm4,pwm5,pwm6,pwm7);
+}
+void CTRL_y(float Distant_y_except)
+{
+	Angle_except_y = change(Distant_y_except);
+	inc_pwm_y = PID_CAL_y(Angle_Y,Angle_except_y);
+	y_PWM_High += inc_pwm_y;
+	y_PWM_Low  -= inc_pwm_y;
 	
+	//mpu6050_send_data(x_PWM_High,x_PWM_Low,Angle_except_x,Angle_except_y,Kp_err,Ki_err);
+
 	if(y_PWM_High >10000)
 	{
 		y_PWM_High = 10000;
@@ -65,20 +85,6 @@ void CTRL_1(void)
 		y_PWM_Low = 0;
 	}
 
-	if(Angle_X<=0)
-	{	
-		pwm2 = x_PWM_High;
-		pwm6 = x_PWM_High;
-		pwm3 = x_PWM_Low;
-		pwm7 = x_PWM_Low;
-	}
-	if(Angle_X>0)
-	{
-		pwm2 = x_PWM_Low;
-		pwm6 = x_PWM_Low;
-		pwm3 = x_PWM_High;
-		pwm7 = x_PWM_High;
-	}
 	if(Angle_Y<=0)
 	{	
 		pwm0 = y_PWM_High;
@@ -96,4 +102,13 @@ void CTRL_1(void)
 	SetPwm(pwm0,pwm1,pwm2,pwm3,pwm4,pwm5,pwm6,pwm7);
 }
 
+float x,y;
 
+//输入角度和长度
+void line(float angle_l,float length_l)
+{
+	x=length_l*sin(angle_l/180*3.1415);
+	y=length_l*cos(angle_l/180*3.1415);
+	CTRL_x(x);
+	CTRL_y(y);
+}

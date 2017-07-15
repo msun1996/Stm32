@@ -1,5 +1,5 @@
 Dependencies for Project 'Template', Target 'Template': (DO NOT MODIFY !)
-F (.\main.c)(0x5969B2E5)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork -I..\CORE -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\FWLIB\inc -I..\HARDWARE\MPU6050 -I..\HARDWARE\IIC -I..\HARDWARE\MPU6050\eMPL -I..\HARDWARE\TIMER -I..\HARDWARE\IMU -I..\HARDWARE\POS_MACH -I..\HARDWARE\PWM -I..\HARDWARE\LED -I..\HARDWARE\CTRL -I..\HARDWARE\PID-I C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE-I e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I e:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F40_41xxx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o ..\obj\main.o --omf_browse ..\obj\main.crf --depend ..\obj\main.d)
+F (.\main.c)(0x596A33EC)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork -I..\CORE -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\FWLIB\inc -I..\HARDWARE\MPU6050 -I..\HARDWARE\IIC -I..\HARDWARE\MPU6050\eMPL -I..\HARDWARE\TIMER -I..\HARDWARE\IMU -I..\HARDWARE\POS_MACH -I..\HARDWARE\PWM -I..\HARDWARE\LED -I..\HARDWARE\CTRL -I..\HARDWARE\PID-I C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE-I e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I e:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F40_41xxx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o ..\obj\main.o --omf_browse ..\obj\main.crf --depend ..\obj\main.d)
 I (stm32f4xx.h)(0x5966C9FA)
 I (..\CORE\core_cm4.h)(0x5966C9F9)
 I (e:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
@@ -48,7 +48,7 @@ I (..\HARDWARE\POS_MACH\pos_mach.h)(0x5969B2A8)
 I (..\HARDWARE\MPU6050\eMPL\inv_mpu.h)(0x5966C9F9)
 I (..\HARDWARE\MPU6050\eMPL\inv_mpu_dmp_motion_driver.h)(0x5966C9F9)
 I (..\HARDWARE\LED\led.h)(0x53B53723)
-I (..\HARDWARE\CTRL\ctrl.h)(0x59688BC5)
+I (..\HARDWARE\CTRL\ctrl.h)(0x596A3199)
 F (.\stm32f4xx_it.c)(0x5966C9FA)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork -I..\CORE -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\FWLIB\inc -I..\HARDWARE\MPU6050 -I..\HARDWARE\IIC -I..\HARDWARE\MPU6050\eMPL -I..\HARDWARE\TIMER -I..\HARDWARE\IMU -I..\HARDWARE\POS_MACH -I..\HARDWARE\PWM -I..\HARDWARE\LED -I..\HARDWARE\CTRL -I..\HARDWARE\PID-I C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE-I e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I e:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F40_41xxx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o ..\obj\stm32f4xx_it.o --omf_browse ..\obj\stm32f4xx_it.crf --depend ..\obj\stm32f4xx_it.d)
 I (stm32f4xx_it.h)(0x5966C9FA)
 I (stm32f4xx.h)(0x5966C9FA)
@@ -1425,7 +1425,7 @@ I (..\FWLIB\inc\stm32f4xx_can.h)(0x5966C9F9)
 I (..\FWLIB\inc\stm32f4xx_dac.h)(0x5966C9F9)
 I (..\FWLIB\inc\stm32f4xx_dcmi.h)(0x5966C9F9)
 I (..\FWLIB\inc\stm32f4xx_fsmc.h)(0x5966C9F9)
-F (..\SYSTEM\usart\usart.c)(0x5966C9FA)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork -I..\CORE -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\FWLIB\inc -I..\HARDWARE\MPU6050 -I..\HARDWARE\IIC -I..\HARDWARE\MPU6050\eMPL -I..\HARDWARE\TIMER -I..\HARDWARE\IMU -I..\HARDWARE\POS_MACH -I..\HARDWARE\PWM -I..\HARDWARE\LED -I..\HARDWARE\CTRL -I..\HARDWARE\PID-I C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE-I e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I e:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F40_41xxx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o ..\obj\usart.o --omf_browse ..\obj\usart.crf --depend ..\obj\usart.d)
+F (..\SYSTEM\usart\usart.c)(0x596A2D4F)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork -I..\CORE -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\FWLIB\inc -I..\HARDWARE\MPU6050 -I..\HARDWARE\IIC -I..\HARDWARE\MPU6050\eMPL -I..\HARDWARE\TIMER -I..\HARDWARE\IMU -I..\HARDWARE\POS_MACH -I..\HARDWARE\PWM -I..\HARDWARE\LED -I..\HARDWARE\CTRL -I..\HARDWARE\PID-I C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE-I e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I e:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F40_41xxx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o ..\obj\usart.o --omf_browse ..\obj\usart.crf --depend ..\obj\usart.d)
 I (..\SYSTEM\sys\sys.h)(0x5966C9FA)
 I (..\USER\stm32f4xx.h)(0x5966C9FA)
 I (..\CORE\core_cm4.h)(0x5966C9F9)
@@ -1582,7 +1582,7 @@ I (..\FWLIB\inc\stm32f4xx_can.h)(0x5966C9F9)
 I (..\FWLIB\inc\stm32f4xx_dac.h)(0x5966C9F9)
 I (..\FWLIB\inc\stm32f4xx_dcmi.h)(0x5966C9F9)
 I (..\FWLIB\inc\stm32f4xx_fsmc.h)(0x5966C9F9)
-F (..\HARDWARE\POS_MACH\pos_mach.c)(0x5969B2A8)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork -I..\CORE -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\FWLIB\inc -I..\HARDWARE\MPU6050 -I..\HARDWARE\IIC -I..\HARDWARE\MPU6050\eMPL -I..\HARDWARE\TIMER -I..\HARDWARE\IMU -I..\HARDWARE\POS_MACH -I..\HARDWARE\PWM -I..\HARDWARE\LED -I..\HARDWARE\CTRL -I..\HARDWARE\PID-I C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE-I e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I e:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F40_41xxx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o ..\obj\pos_mach.o --omf_browse ..\obj\pos_mach.crf --depend ..\obj\pos_mach.d)
+F (..\HARDWARE\POS_MACH\pos_mach.c)(0x596A148F)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork -I..\CORE -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\FWLIB\inc -I..\HARDWARE\MPU6050 -I..\HARDWARE\IIC -I..\HARDWARE\MPU6050\eMPL -I..\HARDWARE\TIMER -I..\HARDWARE\IMU -I..\HARDWARE\POS_MACH -I..\HARDWARE\PWM -I..\HARDWARE\LED -I..\HARDWARE\CTRL -I..\HARDWARE\PID-I C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE-I e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I e:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F40_41xxx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o ..\obj\pos_mach.o --omf_browse ..\obj\pos_mach.crf --depend ..\obj\pos_mach.d)
 I (..\HARDWARE\POS_MACH\pos_mach.h)(0x5969B2A8)
 I (..\USER\stm32f4xx.h)(0x5966C9FA)
 I (..\CORE\core_cm4.h)(0x5966C9F9)
@@ -1783,8 +1783,8 @@ I (..\FWLIB\inc\stm32f4xx_can.h)(0x5966C9F9)
 I (..\FWLIB\inc\stm32f4xx_dac.h)(0x5966C9F9)
 I (..\FWLIB\inc\stm32f4xx_dcmi.h)(0x5966C9F9)
 I (..\FWLIB\inc\stm32f4xx_fsmc.h)(0x5966C9F9)
-F (..\HARDWARE\CTRL\ctrl.c)(0x5969B63F)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork -I..\CORE -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\FWLIB\inc -I..\HARDWARE\MPU6050 -I..\HARDWARE\IIC -I..\HARDWARE\MPU6050\eMPL -I..\HARDWARE\TIMER -I..\HARDWARE\IMU -I..\HARDWARE\POS_MACH -I..\HARDWARE\PWM -I..\HARDWARE\LED -I..\HARDWARE\CTRL -I..\HARDWARE\PID-I C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE-I e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I e:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F40_41xxx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o ..\obj\ctrl.o --omf_browse ..\obj\ctrl.crf --depend ..\obj\ctrl.d)
-I (..\HARDWARE\CTRL\ctrl.h)(0x59688BC5)
+F (..\HARDWARE\CTRL\ctrl.c)(0x596A33EC)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork -I..\CORE -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\FWLIB\inc -I..\HARDWARE\MPU6050 -I..\HARDWARE\IIC -I..\HARDWARE\MPU6050\eMPL -I..\HARDWARE\TIMER -I..\HARDWARE\IMU -I..\HARDWARE\POS_MACH -I..\HARDWARE\PWM -I..\HARDWARE\LED -I..\HARDWARE\CTRL -I..\HARDWARE\PID-I C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE-I e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I e:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F40_41xxx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o ..\obj\ctrl.o --omf_browse ..\obj\ctrl.crf --depend ..\obj\ctrl.d)
+I (..\HARDWARE\CTRL\ctrl.h)(0x596A3199)
 I (..\USER\stm32f4xx.h)(0x5966C9FA)
 I (..\CORE\core_cm4.h)(0x5966C9F9)
 I (e:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5475F300)
@@ -1824,7 +1824,7 @@ I (..\HARDWARE\IMU\imu.h)(0x596748FE)
 I (..\HARDWARE\PWM\pwm_out.h)(0x59688516)
 I (e:\Keil_v5\ARM\ARMCC\include\math.h)(0x5475F2FE)
 I (..\HARDWARE\POS_MACH\pos_mach.h)(0x5969B2A8)
-F (..\HARDWARE\PID\pid.c)(0x5969B9DE)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork -I..\CORE -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\FWLIB\inc -I..\HARDWARE\MPU6050 -I..\HARDWARE\IIC -I..\HARDWARE\MPU6050\eMPL -I..\HARDWARE\TIMER -I..\HARDWARE\IMU -I..\HARDWARE\POS_MACH -I..\HARDWARE\PWM -I..\HARDWARE\LED -I..\HARDWARE\CTRL -I..\HARDWARE\PID-I C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE-I e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I e:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F40_41xxx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o ..\obj\pid.o --omf_browse ..\obj\pid.crf --depend ..\obj\pid.d)
+F (..\HARDWARE\PID\pid.c)(0x5969ECB9)(-c --cpu Cortex-M4.fp -g -O0 --apcs=interwork -I..\CORE -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\FWLIB\inc -I..\HARDWARE\MPU6050 -I..\HARDWARE\IIC -I..\HARDWARE\MPU6050\eMPL -I..\HARDWARE\TIMER -I..\HARDWARE\IMU -I..\HARDWARE\POS_MACH -I..\HARDWARE\PWM -I..\HARDWARE\LED -I..\HARDWARE\CTRL -I..\HARDWARE\PID-I C:\Users\hzy\Desktop\Stm32\fenglibai\USER\RTE-I e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include-I e:\Keil_v5\ARM\CMSIS\Include-D__UVISION_VERSION="514" -DSTM32F40_41xxx -DSTM32F40_41xxx -DUSE_STDPERIPH_DRIVER-o ..\obj\pid.o --omf_browse ..\obj\pid.crf --depend ..\obj\pid.d)
 I (..\HARDWARE\PID\pid.h)(0x596992ED)
 I (..\USER\stm32f4xx.h)(0x5966C9FA)
 I (..\CORE\core_cm4.h)(0x5966C9F9)

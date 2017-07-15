@@ -10,6 +10,7 @@
 #include "inv_mpu.h"
 #include "inv_mpu_dmp_motion_driver.h"
 #include "led.h"
+#include "ctrl.h"
 
 
 float pitch,roll,yaw; 		//欧拉角
@@ -24,9 +25,9 @@ extern float Angle_X; //卡尔曼标定后角度
 extern float Angle_Y; 
 extern float Angle_Z;
 
-extern char staticflag; //标定完成标志位
+extern char staticflag; //卡尔曼标定完成标志位
 
-s16 pwm_out[8]; //定义8pwm波输入值
+u8 ms;
 
 void All_init()
 {
@@ -38,12 +39,17 @@ void All_init()
 	MPU_Init(); //mpu6050初始化
 	mpu_dmp_init(); //dmp初始化
 	TIM3_Int_Init(1000-1,840-1); //100kHz频率 10ms中断
-	//PWM_Out_Init(400); //初始化pwm波，400Hz
-	/* pwm波调用
-	pwm[0] = 1000;
-	pwm[1] = 1000;
-	SetPwm(pwm_out);
-	*/
+	PWM_Out_Init(400); //初始化pwm波，400Hz
+	SetPwm(5000,5000,5000,5000,5000,5000,5000,5000);
+}
+
+void get_angle()
+{
+	MPU_Get_Accelerometer(&aacx,&aacy,&aacz);	//得到加速度传感器数据
+	MPU_Get_Gyroscope(&gyrox,&gyroy,&gyroz);	//得到陀螺仪数据
+	Angle_Calcu(); //卡尔曼滤波算法
+	Kalman_biaoding();
+	usart1_report_imu(Angle_X*100,Angle_Y*100,Angle_Z*100);
 }
 
 int main(void)
@@ -58,6 +64,7 @@ void TIM3_IRQHandler(void)
 {
 	if(TIM_GetITStatus(TIM3,TIM_IT_Update)==SET) //溢出中断
 	{
+		ms++;
 		
 //		if(mpu_dmp_get_data(&pitch,&roll,&yaw)==0)
 //		{
@@ -68,15 +75,31 @@ void TIM3_IRQHandler(void)
 //			mpu6050_send_data(Angle_x_temp*100,Angle_y_temp*100,Angle_z_temp*100,Angle_X_Final*100,Angle_Y_Final*100,Angle_Z_Final*100);
 //		}
 		
-		MPU_Get_Accelerometer(&aacx,&aacy,&aacz);	//得到加速度传感器数据
-		MPU_Get_Gyroscope(&gyrox,&gyroy,&gyroz);	//得到陀螺仪数据
-		Angle_Calcu(); //卡尔曼滤波算法
-		Kalman_biaoding();
-		if(staticflag == 1)
+		get_angle(); //每10ms进行卡尔曼滤波得到当前倾角度
+		
+		if(staticflag == 1) //判断标定是否完成，完成在进行pid输出pwm
 		{
-			GPIO_ResetBits(GPIOF,GPIO_Pin_9);  //LED0对应引脚GPIOF.9拉低，亮  等同LED0=0;
+			if(ms == 40)
+			{
+				CTRL_1();
+			}
+//			if(ms == 60)
+//			{
+//				SetPwm(0,0,0,0,0,0,0,0);
+//			}
+			if(ms == 124)
+			{
+				CTRL_1();
+			}
+//			if(ms == 140)
+//			{
+//				SetPwm(0,0,0,0,0,0,0,0);
+//			}
+			if(ms == 168)
+			{
+				ms=0;
+			}
 		}
-		usart1_report_imu(Angle_X*100,Angle_Y*100,Angle_Z*100);
 	}
 	TIM_ClearITPendingBit(TIM3,TIM_IT_Update);  //清除中断标志位
 }

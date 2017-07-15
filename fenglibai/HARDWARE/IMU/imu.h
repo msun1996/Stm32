@@ -18,7 +18,7 @@ void Angle_Calcu(void);
 void Kalman_Filter_X(float Accel,float Gyro);
 void Kalman_Filter_Y(float Accel,float Gyro);
 void Kalman_Filter_Z(float Accel, float Gyro);
-void Kalman_biaoding();
+void Kalman_biaoding(void);
 void yijiehubu_P(float angle_m, float gyro_m);
 
 #endif

@@ -196,18 +196,18 @@ u8 PWM_Out_Init(uint16_t hz)
 	}
 }
 
-void SetPwm(int16_t pwm[8])
+void SetPwm(u16 pwm0,u16 pwm1,u16 pwm2,u16 pwm3,u16 pwm4,u16 pwm5,u16 pwm6,u16 pwm7)
 {
 
-	TIM1->CCR4 = pwm[0];			
-	TIM1->CCR3 = pwm[1];
-	TIM1->CCR2 = pwm[2];
-	TIM1->CCR1 = pwm[3];
+	TIM1->CCR4 = pwm0;			
+	TIM1->CCR3 = pwm1;
+	TIM1->CCR2 = pwm2;
+	TIM1->CCR1 = pwm3;
 	
- 	TIM5->CCR4 = pwm[4];
- 	TIM5->CCR3 = pwm[5];
- 	TIM8->CCR4 = pwm[6];
-	TIM8->CCR3 = pwm[7];
+ 	TIM5->CCR4 = pwm4;
+ 	TIM5->CCR3 = pwm5;
+ 	TIM8->CCR4 = pwm6;
+	TIM8->CCR3 = pwm7;
 	
 }
 

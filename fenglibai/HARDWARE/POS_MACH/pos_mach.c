@@ -75,3 +75,162 @@ void usart1_report_imu(short roll,short pitch,short yaw)
 	tbuf[11]=1;	
 	usart1_niming_report(0X01,tbuf,12);
 }
+//发送PWM给上位机
+void Data_send_MotoPWM(short MotoPWM1,short MotoPWM2,short MotoPWM3,short MotoPWM4)
+{
+	u8 tbuf[16];
+	tbuf[0]=(MotoPWM1>>8)&0xff;
+	tbuf[1]=MotoPWM1&0xff;
+	tbuf[2]=(MotoPWM2>>8)&0xff;
+	tbuf[3]=MotoPWM2&0xff;
+	tbuf[4]=(MotoPWM3>>8)&0xff;
+	tbuf[5]=MotoPWM3&0xff;
+	tbuf[6]=(MotoPWM4>>8)&0xff;
+	tbuf[7]=MotoPWM4&0xff;
+	tbuf[8]=0;
+	tbuf[9]=0;
+	tbuf[10]=0;
+	tbuf[11]=0;
+	tbuf[12]=0;
+	tbuf[13]=0;
+	tbuf[14]=0;
+	tbuf[15]=0;
+	usart1_niming_report(0X06,tbuf,16);
+
+}
+
+//发送校验位
+void send_receive_check(u8 head,u8 check_sum)
+{
+	u8 tbuf[16];
+	u8 sum = 0;
+	u8 i=0;
+	
+	tbuf[0]=head;
+	tbuf[1]=check_sum;
+	for(i=0;i<6;i++)
+		sum += tbuf[i];
+	tbuf[2]=sum;
+	usart1_niming_report(0Xef,tbuf,7);
+}
+
+//单片机预解析上位机
+void usart1_receive_char(u8 data)
+{   	
+	static u8 RxBuffer[50];
+	static u8 _data_len = 0,_data_cnt = 0;
+	static u8 state = 0;
+	if(state==0&&data==0xAA)
+	{
+		state=1;
+		RxBuffer[0]=data;//帧头
+	}
+	else if(state==1&&data==0xAF)
+	{
+		state=2;
+		RxBuffer[1]=data;
+	}
+	else if(state==2&&data<0XF1)
+	{
+		state=3;
+		RxBuffer[2]=data;//功能字
+	}
+	else if(state==3&&data<50)
+	{
+		state = 4;
+		RxBuffer[3]=data;//长度
+		_data_len = data;
+		_data_cnt = 0;
+	}
+	else if(state==4&&_data_len>0)
+	{
+		_data_len--;
+		RxBuffer[4+_data_cnt++]=data;
+		if(_data_len==0)
+			state = 5;
+	}
+	else if(state==5)//进行数据解析
+	{
+		state = 0;
+		RxBuffer[4+_data_cnt]=data;
+		Data_Receive_Anl(RxBuffer,_data_cnt+5);
+	}
+	else
+		state = 0;
+}
+//数据解析
+void Data_Receive_Anl(u8 *data_buf,u8 num)
+{
+	u8 sum = 0;
+	u8 i=0;
+	for(i=0;i<(num-1);i++)
+		sum += *(data_buf+i);
+	if(!(sum==*(data_buf+num-1)))		return;		//判断sum
+	if(!(*(data_buf)==0xAA && *(data_buf+1)==0xAF))		return;		//判断帧头
+	if(*(data_buf+2)==0X01)//传感器校验
+	{
+		if(*(data_buf+4)==0X01)
+			//mpu6050.Acc_CALIBRATE = 1;
+		if(*(data_buf+4)==0X02)
+			//mpu6050.Gyro_CALIBRATE = 1;
+		if(*(data_buf+4)==0X03)
+		{
+			//mpu6050.Acc_CALIBRATE = 1;		
+			//mpu6050.Gyro_CALIBRATE = 1;			
+		}
+	}
+	if(*(data_buf+2)==0X10)								//PID1_3  
+  {
+        //fly_pitch_Kp = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+        //fly_pitch_Ki = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        //fly_pitch_Kd = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        //fly_roll_Kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+        //fly_roll_Ki = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+        //fly_roll_Kd = 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+        //fly_yaw_Kp = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+        //fly_yaw_Ki = 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
+        //fly_yaw_Kd = 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
+			send_receive_check(*(data_buf+2),sum);
+  }
+  if(*(data_buf+2)==0X11)								//PID4_6
+  {
+        //ctrl_1.PID[PID4].kp   =0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+        //ctrl_1.PID[PID4].ki   =0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        //ctrl_1.PID[PID4].kd   =0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        //ctrl_1.PID[PID5].kp 	= 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+        //ctrl_1.PID[PID5].ki 	= 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+        //ctrl_1.PID[PID5].kd 	= 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+        //ctrl_1.PID[PID6].kp	  = 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+        //ctrl_1.PID[PID6].ki 	= 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
+        //ctrl_1.PID[PID6].kd 	= 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
+		    send_receive_check(*(data_buf+2),sum);
+	}
+  if(*(data_buf+2)==0X12)								//PID7_9
+  {	
+        //fly_gas=(vs16)(*(data_buf+4)<<8)|*(data_buf+5);
+        //ctrl_2.PID[PIDROLL].ki  = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        //ctrl_2.PID[PIDROLL].kd  = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        //ctrl_2.PID[PIDPITCH].kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+        //ctrl_2.PID[PIDPITCH].ki = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+        //ctrl_2.PID[PIDPITCH].kd = 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+        //ctrl_2.PID[PIDYAW].kp 	= 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+        //ctrl_2.PID[PIDYAW].ki 	= 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
+        //ctrl_2.PID[PIDYAW].kd 	= 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
+			send_receive_check(*(data_buf+2),sum);
+	}
+	if(*(data_buf+2)==0X13)								//PID10_12
+	{
+		     send_receive_check(*(data_buf+2),sum);
+	}
+	if(*(data_buf+2)==0X14)								//PID13_15
+	{
+		     send_receive_check(*(data_buf+2),sum);
+	}
+	if(*(data_buf+2)==0X15)								//PID16_18
+	{
+		     send_receive_check(*(data_buf+2),sum);
+	}
+
+}
+
+

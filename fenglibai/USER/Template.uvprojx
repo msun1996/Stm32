@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\FWLIB\inc;..\HARDWARE\MPU6050;..\HARDWARE\IIC;..\HARDWARE\MPU6050\eMPL;..\HARDWARE\TIMER;..\HARDWARE\IMU;..\HARDWARE\POS_MACH</IncludePath>
+              <IncludePath>..\CORE;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\FWLIB\inc;..\HARDWARE\MPU6050;..\HARDWARE\IIC;..\HARDWARE\MPU6050\eMPL;..\HARDWARE\TIMER;..\HARDWARE\IMU;..\HARDWARE\POS_MACH;..\HARDWARE\PWM;..\HARDWARE\LED;..\HARDWARE\CTRL;..\HARDWARE\PID</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -672,6 +672,26 @@
               <FileName>inv_mpu_dmp_motion_driver.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\MPU6050\eMPL\inv_mpu_dmp_motion_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_out.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\PWM\pwm_out.c</FilePath>
+            </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\LED\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\CTRL\ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\PID\pid.c</FilePath>
             </File>
           </Files>
         </Group>

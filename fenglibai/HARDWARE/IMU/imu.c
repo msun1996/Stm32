@@ -255,7 +255,7 @@ void Kalman_Filter_Z(float Accel, float Gyro) //卡尔曼函数
 }
 
 //间隔取100次数据平均比较，如两次平均值处于误差允许，则取此值为静态标定值
-void Kalman_biaoding()
+void Kalman_biaoding(void)
 {
 	st++;
 	//X轴角度标定

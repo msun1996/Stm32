@@ -42,7 +42,17 @@ void CTRL_x(float Distant_x_except)
 	x_PWM_High += inc_pwm_x;
 	x_PWM_Low  -= inc_pwm_x;
 	
-	//mpu6050_send_data(x_PWM_High,x_PWM_Low,Angle_except_x,Angle_except_y,Kp_err,Ki_err);
+	//ËÀÇø
+	if(x_PWM_High<=5500 && x_PWM_High>5000)
+	{
+		x_PWM_High =5500;
+	}
+	if(x_PWM_Low<=5000 && x_PWM_Low>=4500)
+	{
+		x_PWM_Low =4500;
+	}
+	
+	mpu6050_send_data(x_PWM_High,x_PWM_Low,Angle_except_x,Angle_except_y,Kp_err,Ki_err);
 	if(x_PWM_High >10000)
 	{
 		x_PWM_High = 10000;
@@ -74,8 +84,16 @@ void CTRL_y(float Distant_y_except)
 	y_PWM_High += inc_pwm_y;
 	y_PWM_Low  -= inc_pwm_y;
 	
+	//ËÀÇø
+	if(y_PWM_High<=5500 && y_PWM_High>=5000)
+	{
+		y_PWM_High =5500;
+	}
+	if(y_PWM_Low<=5000 && y_PWM_Low>=4500)
+	{
+		y_PWM_Low =4500;
+	}
 	//mpu6050_send_data(x_PWM_High,x_PWM_Low,Angle_except_x,Angle_except_y,Kp_err,Ki_err);
-
 	if(y_PWM_High >10000)
 	{
 		y_PWM_High = 10000;
@@ -108,7 +126,7 @@ float x,y;
 void line(float angle_l,float length_l)
 {
 	x=length_l*sin(angle_l/180*3.1415);
-	y=length_l*cos(angle_l/180*3.1415);
+	y=length_l*fabs(cos(angle_l/180*3.1415));
 	CTRL_x(x);
 	CTRL_y(y);
 }

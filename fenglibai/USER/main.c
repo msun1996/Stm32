@@ -29,11 +29,25 @@ extern char staticflag; //卡尔曼标定完成标志位
 
 u8 ms1,ms2;
 
-u8 mode; //方式选择
+u8 mode=0; //方式选择
 float length_any; //长度（半径）
 u8 angle_any; //角度
 
 u8 startflag;
+
+extern float err_x_Angle; //当前误差
+extern float err_x_Angle_last; //上次误差
+extern float err_x_Angle_last_next; //上上次误差
+
+extern float err_y_Angle; //当前误差
+extern float err_y_Angle_last; //上次误差
+extern float err_y_Angle_last_next; //上上次误差
+
+extern short x_PWM_High; //X方向PWM波高输出
+extern short x_PWM_Low;  //X方向PWM波低输出
+
+extern short y_PWM_High; //Y方向PWM波高输出
+extern short y_PWM_Low;  //Y方向PWM波低输出
 
 void All_init()
 {
@@ -55,20 +69,21 @@ void get_angle()
 	MPU_Get_Gyroscope(&gyrox,&gyroy,&gyroz);	//得到陀螺仪数据
 	Angle_Calcu(); //卡尔曼滤波算法
 	Kalman_biaoding();
-	//usart1_report_imu(Angle_X*100,Angle_Y*100,Angle_Z*100);
+	usart1_report_imu(Angle_X*100,Angle_Y*100,Angle_Z*100);
 }
 void way1(void)
 {
 	ms1++;
 	if(startflag==0)
 	{
+		u16 startpwm = 3500;
 		if(angle_any>=90)
-		{
-			SetPwm(5000,0,5000,0,5000,0,5000,0);
+		{		
+			SetPwm(startpwm,0,startpwm,0,startpwm,0,startpwm,0);
 		}
 		else
 		{
-			SetPwm(0,5000,5000,0,0,5000,5000,0);
+			SetPwm(0,startpwm,startpwm,0,0,startpwm,startpwm,0);
 		}
 		startflag=1;
 	}
@@ -90,19 +105,19 @@ void way2()
 	ms2++;
 	if(ms2 == 42)
 	{
-		CTRL_x(0.3);
+		CTRL_x(length_any);
 	}
 	if(ms2 == 84)
 	{
-		CTRL_y(0.3);
+		CTRL_y(length_any);
 	}
 	if(ms2 == 124)
 	{
-		CTRL_x(0.3);
+		CTRL_x(length_any);
 	}
 	if(ms2 == 168)
 	{
-		CTRL_y(0.3);
+		CTRL_y(length_any);
 		ms2=0;
 	}
 }
@@ -134,6 +149,22 @@ void TIM3_IRQHandler(void)
 			if(mode == 0)
 			{
 				SetPwm(0,0,0,0,0,0,0,0);
+				startflag=0;
+				ms1=0;
+				ms2=0;
+				err_x_Angle = 0 ; //当前误差
+				err_x_Angle_last = 0; //上次误差
+				err_x_Angle_last_next = 0; //上上次误差
+
+				err_y_Angle = 0; //当前误差
+				err_y_Angle_last = 0; //上次误差
+				err_y_Angle_last_next = 0; //上上次误差
+				
+				x_PWM_High=5000; //X方向PWM波高输出
+				x_PWM_Low=5000;  //X方向PWM波低输出
+
+				y_PWM_High=5000; //Y方向PWM波高输出
+				y_PWM_Low=5000;  //Y方向PWM波低输出
 			}
 			if(mode == 1)
 			{

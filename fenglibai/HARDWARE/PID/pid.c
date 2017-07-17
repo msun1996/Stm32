@@ -1,9 +1,9 @@
 #include "pid.h"
 #include "math.h"
 
-#define Kp 70
-#define Ki 4
-#define Kd 7
+float Kp=80;
+float Ki=15;
+float Kd=15;
 
 float err_x_Angle; //当前误差
 float err_x_Angle_last; //上次误差

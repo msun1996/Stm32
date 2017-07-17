@@ -4,6 +4,10 @@ extern u8 mode;
 extern float length_any;
 extern u8 angle_any; 
 
+extern float Kp;
+extern float Ki;
+extern float Kd;
+
 //串口1发送1个字符 
 //c:要发送的字符
 void usart1_send_char(u8 c)
@@ -235,6 +239,9 @@ void Data_Receive_Anl(u8 *data_buf,u8 num)
 		mode = (vs16)(*(data_buf+4)<<8)|*(data_buf+5);
 		angle_any = (vs16)(*(data_buf+6)<<8)|*(data_buf+7);
 		length_any = 0.001* ((vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+		Kp = (vs16)(*(data_buf+10)<<8)|*(data_buf+11);
+        Ki = (vs16)(*(data_buf+12)<<8)|*(data_buf+13);
+        Kd = (vs16)(*(data_buf+14)<<8)|*(data_buf+15);
 		send_receive_check(*(data_buf+2),sum);
 	}
 }

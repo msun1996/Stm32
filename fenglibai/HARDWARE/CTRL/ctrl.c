@@ -9,124 +9,251 @@ extern float Angle_X; //卡尔曼标定后角度
 extern float Angle_Y; 
 extern float Angle_Z;
 
-float Angle_except;
-float Angle_except_x;
-float Angle_except_y;
+float Angle_expect_A; //期望角度幅值
+float Angle_expect_x_A;
+float Angle_expect_y_A;
 
-short inc_pwm_x;
-short inc_pwm_y;
+float Angle_expect;  //期望实时角度
+float Angle_expect_x;
+float Angle_expect_y;
 
-short x_PWM_High=5000; //X方向PWM波高输出
-short x_PWM_Low=5000;  //X方向PWM波低输出
+float inc_pwm_x;
+float inc_pwm_y;
 
-short y_PWM_High=5000; //Y方向PWM波高输出
-short y_PWM_Low=5000;  //Y方向PWM波低输出
+float x_PWM_High=5100; //X方向PWM波高输出
+float x_PWM_Low=4900;  //X方向PWM波低输出
 
-extern short Kp_err;
-extern short Ki_err;
-extern short Kd_err;
+float y_PWM_High=5100; //Y方向PWM波高输出
+float y_PWM_Low=4900;  //Y方向PWM波低输出
+
+extern float Kp_err_x;
+extern float Ki_err_x;
+extern float Kd_err_x;
+
+extern float Kp_err_y;
+extern float Ki_err_y;
+extern float Kd_err_y;
 
 u16 pwm0,pwm1,pwm2,pwm3,pwm4,pwm5,pwm6,pwm7;
 
-//期望距离变为期望角度
+u16 nowtime;
+
+float x_A,y_A; 
+float x,y;
+float bgT = 1600; //摆杆周期ms
+float xphase,yphase; //x,y相位
+float phase_err=0; //x,y相位差
+
+//期望距离变为期望角度幅值
 float change(float Distant_except)
 {
-	Angle_except = atan2(Distant_except,0.89)/3.14*180;
-	return Angle_except;
+	Angle_expect_A = atan2(Distant_except,89)/3.14*180;
+	return Angle_expect_A;
 }
-//输入对应x,y长度
-void CTRL_x(float Distant_x_except)
+//输入角度和长度
+void way1(float angle_l,float length_l)
 {
-	Angle_except_x = change(Distant_x_except);
-	inc_pwm_x = PID_CAL_x(Angle_X,Angle_except_x);
-	x_PWM_High += inc_pwm_x;
-	x_PWM_Low  -= inc_pwm_x;
+	nowtime += 10;     //每10ms采样（定时器）
+	x_A=length_l*sin(angle_l/180*3.1415);  //x,y长度(赋值)计算
+	y_A=length_l*fabs(cos(angle_l/180*3.1415));
 	
-	//死区
-	if(x_PWM_High<=5500 && x_PWM_High>5000)
+	if(angle_l<=90)		//大于0小于90直线
 	{
-		x_PWM_High =5500;
+		phase_err = 3.1415;
 	}
-	if(x_PWM_Low<=5000 && x_PWM_Low>=4500)
+	else
 	{
-		x_PWM_Low =4500;
+		phase_err = 0;
 	}
 	
-	mpu6050_send_data(x_PWM_High,x_PWM_Low,Angle_except_x,Angle_except_y,Kp_err,Ki_err);
-	if(x_PWM_High >10000)
+	xphase=2*3.1415*nowtime/bgT; //x,y相位
+	yphase=xphase + phase_err;
+	
+	x = x_A*sin(xphase);
+	y = y_A*sin(yphase);
+	
+	Angle_expect_x = change(x);
+	Angle_expect_y = change(y);
+	
+	inc_pwm_x=PID_CAL_x(Angle_X,Angle_expect_x);
+	inc_pwm_y=PID_CAL_y(Angle_Y,Angle_expect_y);
+
+	
+	mpu6050_send_data(x_PWM_High,x,y,Angle_expect_x,Angle_expect_y,inc_pwm_x);
+	
+	if(inc_pwm_x > 0)
+	{
+		x_PWM_High = 5000 + inc_pwm_x;
+		x_PWM_Low  = 5000 - inc_pwm_x;
+	}
+	else
+	{
+		x_PWM_Low  = 5000 + inc_pwm_x;
+		x_PWM_High = 5000 - inc_pwm_x;
+	}
+	if(x_PWM_High >= 10000)
 	{
 		x_PWM_High = 10000;
 	}
-	if(x_PWM_Low < 0)
+	if(x_PWM_Low <= 0)
 	{
 		x_PWM_Low = 0;
 	}
-	if(Angle_X<0)
+	
+	if(inc_pwm_y > 0)
 	{	
-		pwm2 = x_PWM_High;
-		pwm6 = x_PWM_High;
-		pwm3 = x_PWM_Low;
-		pwm7 = x_PWM_Low;
+		y_PWM_High = 5000 + inc_pwm_y;
+		y_PWM_Low  = 5000 - inc_pwm_y;
 	}
-	if(Angle_X>=0)
+	else
+	{
+		y_PWM_Low  = 5000 + inc_pwm_y;
+		y_PWM_High = 5000 - inc_pwm_y;
+	}
+	if(y_PWM_High >= 10000)
+	{
+		y_PWM_High = 10000;
+	}
+	if(y_PWM_Low <= 0)
+	{
+		y_PWM_Low = 0;
+	}
+
+	if(inc_pwm_x > 0)
 	{
 		pwm2 = x_PWM_Low;
 		pwm6 = x_PWM_Low;
 		pwm3 = x_PWM_High;
 		pwm7 = x_PWM_High;
 	}
-	SetPwm(pwm0,pwm1,pwm2,pwm3,pwm4,pwm5,pwm6,pwm7);
-}
-void CTRL_y(float Distant_y_except)
-{
-	Angle_except_y = change(Distant_y_except);
-	inc_pwm_y = PID_CAL_y(Angle_Y,Angle_except_y);
-	y_PWM_High += inc_pwm_y;
-	y_PWM_Low  -= inc_pwm_y;
+	else
+	{
+		pwm2 = x_PWM_High;
+		pwm6 = x_PWM_High;
+		pwm3 = x_PWM_Low;
+		pwm7 = x_PWM_Low;
+	}
 	
-	//死区
-	if(y_PWM_High<=5500 && y_PWM_High>=5000)
-	{
-		y_PWM_High =5500;
-	}
-	if(y_PWM_Low<=5000 && y_PWM_Low>=4500)
-	{
-		y_PWM_Low =4500;
-	}
-	//mpu6050_send_data(x_PWM_High,x_PWM_Low,Angle_except_x,Angle_except_y,Kp_err,Ki_err);
-	if(y_PWM_High >10000)
-	{
-		y_PWM_High = 10000;
-	}
-	if(y_PWM_Low < 0)
-	{
-		y_PWM_Low = 0;
-	}
-
-	if(Angle_Y<=0)
+	if(inc_pwm_y > 0)
 	{	
-		pwm0 = y_PWM_High;
-		pwm4 = y_PWM_High;
-		pwm1 = y_PWM_Low;
-		pwm5 = y_PWM_Low;
-	}
-	if(Angle_Y>0)
-	{
 		pwm0 = y_PWM_Low;
 		pwm4 = y_PWM_Low;
 		pwm1 = y_PWM_High;
 		pwm5 = y_PWM_High;
 	}
+	else
+	{
+		pwm0 = y_PWM_High;
+		pwm4 = y_PWM_High;
+		pwm1 = y_PWM_Low;
+		pwm5 = y_PWM_Low;
+	}
 	SetPwm(pwm0,pwm1,pwm2,pwm3,pwm4,pwm5,pwm6,pwm7);
+	
+	if(nowtime >= bgT)
+	{
+		nowtime=0;
+	}
+
 }
 
-float x,y;
-
 //输入角度和长度
-void line(float angle_l,float length_l)
+void way2(float length_l)
 {
-	x=length_l*sin(angle_l/180*3.1415);
-	y=length_l*fabs(cos(angle_l/180*3.1415));
-	CTRL_x(x);
-	CTRL_y(y);
+	nowtime += 10;     //每10ms采样（定时器）
+	
+	x_A = length_l;
+	y_A = length_l;
+	phase_err = 3.1415/2;
+
+	
+	xphase=2*3.1415*nowtime/bgT; //x,y相位
+	yphase=xphase + phase_err;
+	
+	x = x_A*sin(xphase);
+	y = y_A*sin(yphase);
+	
+	Angle_expect_x = change(x);
+	Angle_expect_y = change(y);
+	
+	inc_pwm_x=PID_CAL_x(Angle_X,Angle_expect_x);
+	inc_pwm_y=PID_CAL_y(Angle_Y,Angle_expect_y);
+
+	
+	mpu6050_send_data(x_PWM_High,x,y,Angle_expect_x,Angle_expect_y,inc_pwm_x);
+	
+	if(inc_pwm_x > 0)
+	{
+		x_PWM_High = 5000 + inc_pwm_x;
+		x_PWM_Low  = 5000 - inc_pwm_x;
+	}
+	else
+	{
+		x_PWM_Low  = 5000 + inc_pwm_x;
+		x_PWM_High = 5000 - inc_pwm_x;
+	}
+	if(x_PWM_High >= 10000)
+	{
+		x_PWM_High = 10000;
+	}
+	if(x_PWM_Low <= 0)
+	{
+		x_PWM_Low = 0;
+	}
+	
+	if(inc_pwm_y > 0)
+	{	
+		y_PWM_High = 5000 + inc_pwm_y;
+		y_PWM_Low  = 5000 - inc_pwm_y;
+	}
+	else
+	{
+		y_PWM_Low  = 5000 + inc_pwm_y;
+		y_PWM_High = 5000 - inc_pwm_y;
+	}
+	if(y_PWM_High >= 10000)
+	{
+		y_PWM_High = 10000;
+	}
+	if(y_PWM_Low <= 0)
+	{
+		y_PWM_Low = 0;
+	}
+
+	if(inc_pwm_x > 0)
+	{
+		pwm2 = x_PWM_Low;
+		pwm6 = x_PWM_Low;
+		pwm3 = x_PWM_High;
+		pwm7 = x_PWM_High;
+	}
+	else
+	{
+		pwm2 = x_PWM_High;
+		pwm6 = x_PWM_High;
+		pwm3 = x_PWM_Low;
+		pwm7 = x_PWM_Low;
+	}
+	
+	if(inc_pwm_y > 0)
+	{	
+		pwm0 = y_PWM_Low;
+		pwm4 = y_PWM_Low;
+		pwm1 = y_PWM_High;
+		pwm5 = y_PWM_High;
+	}
+	else
+	{
+		pwm0 = y_PWM_High;
+		pwm4 = y_PWM_High;
+		pwm1 = y_PWM_Low;
+		pwm5 = y_PWM_Low;
+	}
+	SetPwm(pwm0,pwm1,pwm2,pwm3,pwm4,pwm5,pwm6,pwm7);
+	
+	if(nowtime >= bgT)
+	{
+		nowtime=0;
+	}
+
 }

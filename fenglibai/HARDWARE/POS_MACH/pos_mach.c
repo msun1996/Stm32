@@ -4,9 +4,13 @@ extern u8 mode;
 extern float length_any;
 extern u8 angle_any; 
 
-extern float Kp;
-extern float Ki;
-extern float Kd;
+extern float Kp_x;
+extern float Ki_x;
+extern float Kd_x;
+
+extern float Kp_y;
+extern float Ki_y;
+extern float Kd_y;
 
 //串口1发送1个字符 
 //c:要发送的字符
@@ -19,7 +23,7 @@ void usart1_send_char(u8 c)
 //fun:功能字. 0X00~0XFF
 //data:数据缓存区,最多28字节!!
 //len:data区有效数据个数
-void usart1_niming_report(u8 fun,u8*data,u8 len)
+void usart1_niming_report(u8 fun,u8*data,u8 len) 
 {
 	u8 send_buf[32];
 	u8 i;
@@ -238,10 +242,13 @@ void Data_Receive_Anl(u8 *data_buf,u8 num)
 	{
 		mode = (vs16)(*(data_buf+4)<<8)|*(data_buf+5);
 		angle_any = (vs16)(*(data_buf+6)<<8)|*(data_buf+7);
-		length_any = 0.001* ((vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
-		Kp = (vs16)(*(data_buf+10)<<8)|*(data_buf+11);
-        Ki = (vs16)(*(data_buf+12)<<8)|*(data_buf+13);
-        Kd = (vs16)(*(data_buf+14)<<8)|*(data_buf+15);
+		length_any = (vs16)(*(data_buf+8)<<8)|*(data_buf+9);
+		Kp_x = 0.1*((vs16)(*(data_buf+10)<<8)|*(data_buf+11));
+        Ki_x = 000.1*((vs16)(*(data_buf+12)<<8)|*(data_buf+13));
+        Kd_x = 0.1*((vs16)(*(data_buf+14)<<8)|*(data_buf+15));
+		Kp_y = 0.1*((vs16)(*(data_buf+16)<<8)|*(data_buf+17));
+        Ki_y = 0.1*((vs16)(*(data_buf+18)<<8)|*(data_buf+19));
+        Kd_y = 0.1*((vs16)(*(data_buf+20)<<8)|*(data_buf+21));
 		send_receive_check(*(data_buf+2),sum);
 	}
 }

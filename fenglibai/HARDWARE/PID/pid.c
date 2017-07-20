@@ -1,9 +1,14 @@
 #include "pid.h"
 #include "math.h"
 
-float Kp=80;
-float Ki=15;
-float Kd=15;
+float Kp_x=0;
+float Ki_x=0;
+float Kd_x=0;
+
+float Kp_y=0;
+float Ki_y=0;
+float Kd_y=0;
+
 
 float err_x_Angle; //当前误差
 float err_x_Angle_last; //上次误差
@@ -13,36 +18,76 @@ float err_y_Angle; //当前误差
 float err_y_Angle_last; //上次误差
 float err_y_Angle_last_next; //上上次误差
 
-short Kp_err;
-short Ki_err;
-short Kd_err;
+float Kp_err_x;
+float Ki_err_x;
+float Kd_err_x;
 
-short inc_x_PWM;
-short inc_y_PWM;
+float Kp_err_y;
+float Ki_err_y;
+float Kd_err_y;
+
+float inc_x_PWM;
+float inc_y_PWM;
 
 
 //PID计算，输入现实倾角和期望倾角，输出pwm变化量
-short PID_CAL_x(float Angle_X_now,float Angle_x_except)
+float PID_CAL_x(float Angle_X_now,float Angle_x_expect)
 {
-	err_x_Angle = Angle_x_except - fabs(Angle_X_now);
-	Kp_err = err_x_Angle-err_x_Angle_last;
-	Ki_err = err_x_Angle;
-	Kd_err = err_x_Angle-2*err_x_Angle_last+err_x_Angle_last_next;
-	inc_x_PWM = Kp*Kp_err + Ki*Ki_err + Kd*Kd_err;
-	err_x_Angle_last_next = err_x_Angle_last;
+//	if(Angle_x_except >= 0)
+//	{
+//		err_x_Angle = Angle_x_except - Angle_X_now;
+//	}
+//	else
+//	{
+//		err_x_Angle = Angle_X_now - Angle_x_except;		
+//	}
+//	Kp_err = err_x_Angle-err_x_Angle_last;
+//	Ki_err = err_x_Angle;
+//	Kd_err = err_x_Angle-2*err_x_Angle_last+err_x_Angle_last_next;
+//	inc_x_PWM = Kp*Kp_err + Ki*Ki_err + Kd*Kd_err;
+//	err_x_Angle_last_next = err_x_Angle_last;
+//	err_x_Angle_last = err_x_Angle;
+//	return inc_x_PWM;
+	
+	
+	err_x_Angle = Angle_x_expect - Angle_X_now;
+	
+	Kp_err_x = err_x_Angle;
+	Ki_err_x = Ki_err_x + err_x_Angle;
+	Kd_err_x = err_x_Angle - err_x_Angle_last;
+	inc_x_PWM = Kp_x*Kp_err_x + Ki_x*Ki_err_x + Kd_x*Kd_err_x;
 	err_x_Angle_last = err_x_Angle;
 	
 	return inc_x_PWM;
+	
 }
 
-short PID_CAL_y(float Angle_Y_now,float Angle_y_except)
+float PID_CAL_y(float Angle_Y_now,float Angle_y_expect)
 {
-	err_y_Angle = Angle_y_except - fabs(Angle_Y_now);
-	Kp_err = err_y_Angle-err_y_Angle_last;
-	Ki_err = err_y_Angle;
-	Kd_err = err_y_Angle-2*err_y_Angle_last+err_y_Angle_last_next;
-	inc_y_PWM = Kp*Kp_err + Ki*Ki_err + Kd*Kd_err;
-	err_y_Angle_last_next = err_y_Angle_last;
+//	if(Angle_y_except >= 0)
+//	{
+//		err_y_Angle = Angle_y_except - Angle_Y_now;
+//	}
+//	else
+//	{
+//		err_y_Angle = Angle_Y_now - Angle_y_except;		
+//	}
+//	Kp_err = err_y_Angle-err_y_Angle_last;
+//	Ki_err = err_y_Angle;
+//	Kd_err = err_y_Angle-2*err_y_Angle_last+err_y_Angle_last_next;
+//	inc_y_PWM = Kp*Kp_err + Ki*Ki_err + Kd*Kd_err;
+//	err_y_Angle_last_next = err_y_Angle_last;
+//	err_y_Angle_last = err_y_Angle;
+//	
+//	return inc_y_PWM;
+	
+	
+	err_y_Angle = Angle_y_expect - Angle_Y_now;
+
+	Kp_err_y = err_y_Angle;
+	Ki_err_y = Ki_err_y + err_y_Angle;
+	Kd_err_y = err_y_Angle - err_y_Angle_last;
+	inc_y_PWM = Kp_y*Kp_err_y + Ki_y*Ki_err_y + Kd_y*Kd_err_y;
 	err_y_Angle_last = err_y_Angle;
 	
 	return inc_y_PWM;
